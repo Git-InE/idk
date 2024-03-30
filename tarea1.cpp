@@ -10,8 +10,18 @@ struct Pieza {
 struct Tablero {
     Pieza* piezas_tablero[8][8];
 };
-bool tableroEnJaqueMate(Tablero &tablero){
-
+bool *tableroEnJaqueMate(Tablero &tablero){
+    bool amenaza;
+    bool jaque;
+    Pieza Rey;
+    char simbolo;
+    for(int i=0; i<8; i++){
+        for(int j=0; j<8; j++){
+            if (tablero.piezas_tablero[i][j]->simbolo == 'X'){
+            Rey = {'X', i, j};
+            }
+        }
+    }
 };
 int main(){
     ifstream archivo;
@@ -23,6 +33,7 @@ int main(){
     Tablero tablero;
     int cantidad_piezas; /*obtener primera linea del .txt*/
     archivo >> cantidad_piezas;
+    /*asignar cada letra o punto a una posicion dentro del tablero y sus coordenadas*/
     for(int i=0; i<cantidad_piezas; i++){
         char simbolo;
         int x, y;
@@ -32,5 +43,8 @@ int main(){
             tablero.piezas_tablero[i][j]->x = i;
             tablero.piezas_tablero[i][j]->y = j;
     }
+    /*llamar funcion tablerojaquemate*/
+    bool jaque_mate = tableroEnJaqueMate(tablero);
+    tableroEnJaqueMate ? cout << "si" << endl : cout << "no" << endl;
     return 0;
 }
