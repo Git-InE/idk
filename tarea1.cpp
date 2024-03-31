@@ -10,7 +10,7 @@ struct Pieza {
 struct Tablero {
     Pieza* piezas_tablero[8][8];
 };
-bool *tableroEnJaqueMate(Tablero &tablero){
+bool tableroEnJaqueMate(Tablero &tablero){
     bool amenaza;
     bool jaque;
     Pieza Rey;
@@ -48,3 +48,4 @@ int main(){
     tableroEnJaqueMate ? cout << "si" << endl : cout << "no" << endl;
     return 0;
 }
+};
