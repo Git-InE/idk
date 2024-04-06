@@ -31,6 +31,17 @@ struct Tablero
 };
 
 
+char BuscarPieza(int cantidadPiezas, Tablero tablero, int x, int y)
+{
+	for (int i = 0; i < cantidadPiezas; i++)
+	{
+		if (tablero.piezas_tablero[i].x == x && tablero.piezas_tablero[i].y == y)
+		{
+			return tablero.piezas_tablero[i].simbolo;
+		}
+	}
+	return '.';
+}
 
 Pieza* ArregloPosRey(int cantidadPiezas, int indice, Tablero tablero)
 {
@@ -58,17 +69,7 @@ Pieza* ArregloPosRey(int cantidadPiezas, int indice, Tablero tablero)
 	return posRey;
 }
 
-char BuscarPieza(int cantidadPiezas, Tablero tablero, int x, int y)
-{
-	for (int i = 0; i < cantidadPiezas; i++)
-	{
-		if (tablero.piezas_tablero[i].x == x && tablero.piezas_tablero[i].y == y)
-		{
-			return tablero.piezas_tablero[i].simbolo;
-		}
-	}
-	return '.';
-}
+
 
 // Main
 int main()
@@ -111,6 +112,8 @@ int main()
 		
 		posRey = ArregloPosRey(cantidadPiezas,reyIndice, tablero);
 		posY = 0;
+
+		delete[] posRey;
 	}
 	else
 	{
@@ -118,5 +121,6 @@ int main()
 	}
 	tab.close();
 	delete[] tablero.piezas_tablero;
+	
 	return 0;
 }
