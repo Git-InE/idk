@@ -1,117 +1,122 @@
+// Importante: utilizar este tipo de comentario para las funciones, si no quitan 5 pts 
+/*****
+* TipoFunción NombreFunción
+******
+* Resumen Función
+******
+* Input:
+* tipoParámetro NombreParámetro : Descripción Parámetro
+* .......
+******
+* Returns:
+* TipoRetorno, Descripción retorno
+*****/
+
 #include <iostream>
 #include <string>
-#include <fstream>
+#include <fstream> 
+
 using namespace std;
-struct Pieza {
-    char simbolo; 
-    int x, y;
-};
-
-struct Tablero {
-    Pieza *piezas_tablero;
-};
-struct PosRey
+// Structs
+struct Pieza
 {
+	char simbolo;
 	int x, y;
+	
+};
+
+struct Tablero
+{
+	Pieza* piezas_tablero;
 };
 
 
-// Funciones
-/*****
- * 
- * Funcion: ArregloPosRey
- * 
- * Resumen Funcion: Funcion que crea un arreglo de posiciones de rey + las 8 posiciones adyacentes
- * 
- * Input: 
- * int indice : indice de la pieza rey en el arreglo de piezas
- * Tablero tablero : tablero con las piezas
- * 
- * Returns:
- * PosRey*, arreglo de posiciones de rey
-*****/
-PosRey *ArregloPosRey(int indice, Tablero tablero)
+
+Pieza* ArregloPosRey(int cantidadPiezas, int indice, Tablero tablero)
 {
-	PosRey *posRey = new PosRey[9];
+	Pieza* posRey = new Pieza[9];
+	int posReyX = tablero.piezas_tablero[indice].x	;
+	int posReyY = tablero.piezas_tablero[indice].y	;
+	int adjX,adjY;
 	int contador = 0;
 	for (int i = -1; i <= 1; i++)
 	{
 		for (int j = -1; j <= 1; j++)
 		{
-			if ((posRey[contador].y = tablero.piezas_tablero[indice].y + i) > 8 || (posRey[contador].y = tablero.piezas_tablero[indice].y + i) < 0 
-			|| (posRey[contador].y = tablero.piezas_tablero[indice].y + j) > 8 || (posRey[contador].y = tablero.piezas_tablero[indice].y + j) < 0)
+			adjX = posReyX + i;
+			adjY = posReyY + j;
+			if (adjX >= 0 && adjX < 8 && adjY >= 0 && adjY < 8)
 			{
-				posRey[contador].x = -1;
-				posRey[contador].y = -1;
+				posRey[contador].x = adjX;
+				posRey[contador].y = adjY;
+				posRey[contador].simbolo = BuscarPieza(cantidadPiezas, tablero, adjX, adjY);
+				contador++;
 			}
-			else
-			{
-				if (i == 0 && j == 0)
-				{
-					posRey[contador].x = tablero.piezas_tablero[indice].x;
-					posRey[contador].y = tablero.piezas_tablero[indice].y;
-					cout << "Posicion " << contador << " X: " << posRey[contador].x << " Y: " << posRey[contador].y << endl;
-				}
-				else
-				{
 
-				posRey[contador].x = tablero.piezas_tablero[indice].x + i;
-				posRey[contador].y = tablero.piezas_tablero[indice].y + j;
-				cout << "Posicion " << contador << " X: " << posRey[contador].x << " Y: " << posRey[contador].y << endl;
-				}
-			}
-			contador++;
 		}
 	}
 	return posRey;
 }
-bool tableroEnJaqueMate(Tablero tablero){
-    Tablero mesa;
-    int contador;
-    
+
+char BuscarPieza(int cantidadPiezas, Tablero tablero, int x, int y)
+{
+	for (int i = 0; i < cantidadPiezas; i++)
+	{
+		if (tablero.piezas_tablero[i].x == x && tablero.piezas_tablero[i].y == y)
+		{
+			return tablero.piezas_tablero[i].simbolo;
+		}
+	}
+	return '.';
 }
+
+// Main
 int main()
 {
 	int cantidadPiezas;
 	int posY = 0;
 	int indice = 0;
+	int reyIndice = 0;
+	Pieza* posRey;
 	fstream tab;
 	string linea;
-	Tablero tablero;        /*declarar variables*/
+	Tablero tablero;
 
 	tab.open("tablero.txt", ios::in);
 
 	tab >> cantidadPiezas;
-    
+
 	tablero.piezas_tablero = new Pieza[cantidadPiezas];
-    if (!tab.is_open()) {       /*checkear si el archivo abrio*/
-        std::cerr << "Error al abrir el archivo." << std::endl;
-        return 1;
-    }
 
-	while (getline(tab, linea)) /*guardar piezas en tablero*/
+	if (tab.is_open())
 	{
-		for (int i = 0; i < linea.size(); i++)
+		while (getline(tab, linea))
 		{
-			if (linea[i] != '.')
+			for (int i = 0; i < int(linea.size()); i++)
 			{
-				tablero.piezas_tablero[indice].simbolo = linea[i];
-				tablero.piezas_tablero[indice].x = i + 1;
-				tablero.piezas_tablero[indice].y = posY;
-			if (linea[i] == 'X')
-			{
-				ArregloPosRey(indice, tablero);
+				if (linea[i] != '.')
+				{
+					tablero.piezas_tablero[indice].simbolo = linea[i];
+					tablero.piezas_tablero[indice].x = i + 1;
+					tablero.piezas_tablero[indice].y = posY;
+					if (linea[i] == 'X')
+					{
+						reyIndice = indice;
+					}
+					indice++;
+				}
 			}
-			indice++;
-    		}
-    	}
-    	posY++;
-    }
-	posY = 0;
-    tab.close();
-    bool jaque_mate = tableroEnJaqueMate(tablero);
-    tableroEnJaqueMate ? cout << "si" << endl : cout << "no" << endl;
-    return 0;
+			posY++;
+		}
+		
+		posRey = ArregloPosRey(cantidadPiezas,reyIndice, tablero);
+		posY = 0;
+	}
+	else
+	{
+		cout << "Error al abrir el Archivo" << endl;
+	}
+	tab.close();
 	delete[] tablero.piezas_tablero;
+	return 0;
 }
-
