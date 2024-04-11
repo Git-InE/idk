@@ -177,6 +177,20 @@ bool jaqueAlfil(int cantidad_piezas, int indiceRey, Tablero tablero){
 	int posXRey = tablero.piezas_tablero[indiceRey].x;
 	int posYRey = tablero.piezas_tablero[indiceRey].y;
 	
+	
+}
+
+// No se si funciona porque falta la funcion jaqueAlfil
+bool jaqueReina(int cantidad_piezas, int indiceRey, Tablero tablero){
+	int posXRey = tablero.piezas_tablero[indiceRey].x;
+	int posYRey = tablero.piezas_tablero[indiceRey].y;
+
+	if (jaqueTorre(cantidad_piezas, indiceRey, tablero) || jaqueAlfil(cantidad_piezas, indiceRey, tablero))
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	return false;	
 }
 Pieza expandirRey(Tablero tab, int reyindice){
 	Pieza posRey[9];
