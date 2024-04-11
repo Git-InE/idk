@@ -128,7 +128,6 @@ bool jaqueTorre(int cantidad_piezas, int indiceRey, Tablero& tablero){
 
 Pieza expandirRey(Tablero tab, int reyindice){
 	Pieza posRey[9];
-	int i, j = 0;
 	int indice = reyindice;
 	int posReyX = tab.piezas_tablero[indice].x;
 	int posReyY = tab.piezas_tablero[indice].y;
