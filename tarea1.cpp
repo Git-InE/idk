@@ -126,6 +126,58 @@ bool jaqueTorre(int cantidad_piezas, int indiceRey, Tablero& tablero){
 	return false;
 }
 
+bool jaqueCaballo(int cantidad_piezas, int indiceRey, Tablero tablero){
+	int posXRey = tablero.piezas_tablero[indiceRey].x;
+	int posYRey = tablero.piezas_tablero[indiceRey].y;
+	
+	if (BuscarPieza(tablero, posXRey + 1, posYRey + 2) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	else if (BuscarPieza(tablero, posXRey + 1, posYRey - 2) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	else if (BuscarPieza(tablero, posXRey - 1, posYRey + 2) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	else if (BuscarPieza(tablero, posXRey - 1, posYRey - 2) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	else if (BuscarPieza(tablero, posXRey + 2, posYRey + 1) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	else if (BuscarPieza(tablero, posXRey + 2, posYRey - 1) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	else if (BuscarPieza(tablero, posXRey - 2, posYRey + 1) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	else if (BuscarPieza(tablero, posXRey - 2, posYRey - 1) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	return false;
+}
+
+bool jaqueAlfil(int cantidad_piezas, int indiceRey, Tablero tablero){
+	int posXRey = tablero.piezas_tablero[indiceRey].x;
+	int posYRey = tablero.piezas_tablero[indiceRey].y;
+	
+}
 Pieza expandirRey(Tablero tab, int reyindice){
 	Pieza posRey[9];
 	int indice = reyindice;
@@ -197,6 +249,7 @@ int main(){
 	// solo para ver si funciona las funciones
 	bool jaque_peon = jaquePeon(tab->cantidad_piezas, reyindice, *tab);
 	bool jaque_torre = jaqueTorre(tab->cantidad_piezas, reyindice, *tab);
+	bool jaque_caballo = jaqueCaballo(tab->cantidad_piezas, reyindice, *tab);
 
 
     bool jaque_mate = tableroEnJaqueMate(tablero);
