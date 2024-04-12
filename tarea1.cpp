@@ -179,7 +179,7 @@ bool jaqueAlfil(Tablero tablero){
 	int posXRey = tablero.piezas_tablero[reyindice].x;
 	int posYRey = tablero.piezas_tablero[reyindice].y;
 	
-	
+	return false;
 }
 
 // No se si funciona porque falta la funcion jaqueAlfil
