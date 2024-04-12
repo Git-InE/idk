@@ -1,3 +1,17 @@
+// Importante: utilizar este tipo de comentario para las funciones, si no quitan 5 pts 
+/*****
+* TipoFunción NombreFunción
+******
+* Resumen Función
+******
+* Input:
+* tipoParámetro NombreParámetro : Descripción Parámetro
+* .......
+******
+* Returns:
+* TipoRetorno, Descripción retorno
+*****/
+
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -13,6 +27,8 @@ struct Tablero {
 	Pieza *piezas_tablero;
 };
 
+int reyindice = 0;
+
 char BuscarPieza( Tablero tablero, int x, int y){
 	for (int i = 0; i < tablero.cantidad_piezas; i++){
 		if (tablero.piezas_tablero[i].x == x && tablero.piezas_tablero[i].y == y){
@@ -22,9 +38,164 @@ char BuscarPieza( Tablero tablero, int x, int y){
 	return '.';
 }
 
-Pieza expandirRey(Tablero tab, int reyindice){
+
+bool jaquePeon(Tablero tablero)
+{
+    int posXRey = tablero.piezas_tablero[reyindice].x;
+    int posYRey = tablero.piezas_tablero[reyindice].y;
+
+    for (int i = 0; i < tablero.cantidad_piezas; i++)
+    {
+        if (tablero.piezas_tablero[i].simbolo == 'P')
+        {
+            if (tablero.piezas_tablero[i].x == posXRey + 1 && tablero.piezas_tablero[i].y == posYRey + 1)
+            {
+                cout << "Jaque" << endl;
+                return true;
+            }
+            else if (tablero.piezas_tablero[i].x == posXRey - 1 && tablero.piezas_tablero[i].y == posYRey + 1)
+            {
+                cout << "Jaque" << endl;
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool jaqueTorre(Tablero& tablero){
+	int posXRey = tablero.piezas_tablero[reyindice].x;
+	int posYRey = tablero.piezas_tablero[reyindice].y;
+	int contador = 0;
+	
+	for (int x = posXRey + 1; x < 8 - posXRey; x++)
+	{
+		if (BuscarPieza(tablero, x, posYRey) != 'T')
+		{
+			contador++;
+		}
+		else {
+			cout << "Jaque" << endl;
+			return true;
+		}
+
+	}
+
+	for (int x = posXRey - 1; x >= 0; x--)
+	{
+		if (BuscarPieza(tablero, x, posYRey) != 'T')
+		{
+			contador++;
+		}
+		else {
+			cout << "Jaque" << endl;
+			return true;
+		}
+	}
+
+	for (int y = posYRey + 1; y < 8 - posYRey; y++)
+	{
+		if (BuscarPieza(tablero, posXRey, y) != 'T')
+		{
+			contador++;
+		}
+		else {
+			cout << "Jaque" << endl;
+			return true;
+		}
+	}
+
+	for (int y = posYRey - 1; y >= 0; y--)
+	{
+		if (BuscarPieza(tablero, posXRey, y) != 'T')
+		{
+			contador++;
+		}
+		
+		else {
+
+			cout << "Jaque" << endl;
+			return true;
+		}
+	}
+
+	if (contador < 4)
+	{
+		cout << "No hay jaque por Torre" << endl;
+		return true;
+	}
+
+	return false;
+}
+
+bool jaqueCaballo(Tablero tablero){
+	int posXRey = tablero.piezas_tablero[reyindice].x;
+	int posYRey = tablero.piezas_tablero[reyindice].y;
+	
+	if (BuscarPieza(tablero, posXRey + 1, posYRey + 2) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	else if (BuscarPieza(tablero, posXRey + 1, posYRey - 2) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	else if (BuscarPieza(tablero, posXRey - 1, posYRey + 2) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	else if (BuscarPieza(tablero, posXRey - 1, posYRey - 2) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	else if (BuscarPieza(tablero, posXRey + 2, posYRey + 1) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	else if (BuscarPieza(tablero, posXRey + 2, posYRey - 1) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	else if (BuscarPieza(tablero, posXRey - 2, posYRey + 1) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	else if (BuscarPieza(tablero, posXRey - 2, posYRey - 1) == 'C')
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	return false;
+}
+
+bool jaqueAlfil(Tablero tablero){
+	int posXRey = tablero.piezas_tablero[reyindice].x;
+	int posYRey = tablero.piezas_tablero[reyindice].y;
+	
+	return false
+}
+
+// No se si funciona porque falta la funcion jaqueAlfil
+bool jaqueReina(Tablero tablero){
+	int posXRey = tablero.piezas_tablero[reyindice].x;
+	int posYRey = tablero.piezas_tablero[reyindice].y;
+
+	if (jaqueTorre(tablero) || jaqueAlfil(tablero))
+	{
+		cout << "Jaque" << endl;
+		return true;
+	}
+	return false;	
+}
+Pieza expandirRey(Tablero tab){
 	Pieza posRey[9];
-	int i, j = 0;
 	int indice = reyindice;
 	int posReyX = tab.piezas_tablero[indice].x;
 	int posReyY = tab.piezas_tablero[indice].y;
@@ -43,10 +214,12 @@ Pieza expandirRey(Tablero tab, int reyindice){
 				posRey[contador].x = adjX;
 				posRey[contador].y = adjY;
 				contador++;
-				cout << adjX << ' '<< adjY << ' ' << posRey[contador].simbolo << endl;
-				
 			}			
 		}
+	}
+	for (int i = 0; i < 9; i++)
+	{
+		cout << posRey[i].x << ' ' << posRey[i].y << ' ' << posRey[i].simbolo << endl;
 	}
 	return *posRey;
 }
@@ -66,7 +239,7 @@ int main(){
 	}
 	Tablero tablero;
 	char simbolo;
-	int i, j, reyindice = 0;
+	int i, j;
 	int  indice = 0;
 	string linea;
 	archivo >> tablero.cantidad_piezas;
@@ -87,12 +260,14 @@ int main(){
 		}
 	}
 	Tablero *tab = &tablero;
-	Pieza reyexpand = expandirRey(*tab, reyindice);
-	/*solo pa comprobar*/
-	int k;
-	for (k = 0; k< tablero.cantidad_piezas; k++){
-		cout << tablero.piezas_tablero[k].simbolo << ':' << tablero.piezas_tablero[k].x << ',' << tablero.piezas_tablero[k].y << endl;
-	}
+	Pieza reyexpand = expandirRey(*tab);
+	
+	// solo para ver si funciona las funciones
+	bool jaque_peon = jaquePeon(*tab);
+	bool jaque_torre = jaqueTorre(*tab);
+	bool jaque_caballo = jaqueCaballo(*tab);
+
+
     bool jaque_mate = tableroEnJaqueMate(tablero);
     tableroEnJaqueMate ? cout << "si" << endl : cout << "no" << endl;
 
@@ -100,4 +275,3 @@ int main(){
 	archivo.close();
     return 0;
 };
-
