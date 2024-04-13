@@ -4,8 +4,8 @@
 using namespace std;
 
 struct Pieza {
-    char simbolo; 
-    int x, y;
+	char simbolo; 
+	int x, y;
 };
 
 struct Tablero {
@@ -14,8 +14,8 @@ struct Tablero {
 };
 
 struct PiezaRey {
-    int x, y;
-    char simbolo; 
+	int x, y;
+	char simbolo; 
 	bool amenaza;
 };
 
@@ -26,7 +26,7 @@ int reyindice, espacios_validos = 0;
 * char BuscarPieza
 ******
 * Resumen Función
-*
+*busca el simbolo de la pieza en la posicion (x,y)
 ******
 * Input:
 * Tablero tablero, tablero con las piezas
@@ -46,28 +46,39 @@ char BuscarPieza( Tablero tablero, int x, int y){
 	}
 	return '.';
 }
-
+/*****
+* void bloqueoReyEnemigo
+******
+* Resumen Función
+* realiza una busqueda alrededor de todas las casillas posibles que pueden ser amenazadas por el rey enemigo
+* en caso de encontrar al rey enemigo que amenace una de estas casillas, marca la amenaza a la casilla señalada a true
+******
+* Input:
+* Tablero tablero, tablero con las piezas
+******
+* Returns: void
+*****/
 void bloqueoReyEnemigo(Tablero tablero){
-    for (int indice = 0; indice < espacios_validos; indice++)
-    {
-        int posXRey = arreglorey[indice].x;
-        int posYRey = arreglorey[indice].y;
+	for (int indice = 0; indice < espacios_validos; indice++)
+	{
+		int posXRey = arreglorey[indice].x;
+		int posYRey = arreglorey[indice].y;
 
-        for (int i = -1; i <= 1; i++)
-        {
-            for (int j = -1; j <= 1; j++)
-            {
-                if (i != 0 || j != 0)
-                {
-                    char pieza = BuscarPieza(tablero, posXRey + i, posYRey + j);
-                    if (pieza == 'K')
-                    {
-                        arreglorey[indice].amenaza = true;
-                    }
-                }
-            }
-        }
-    }
+		for (int i = -1; i <= 1; i++)
+		{
+			for (int j = -1; j <= 1; j++)
+			{
+				if (i != 0 || j != 0)
+				{
+					char pieza = BuscarPieza(tablero, posXRey + i, posYRey + j);
+					if (pieza == 'K')
+					{
+						arreglorey[indice].amenaza = true;
+					}
+				}
+			}
+		}
+	}
 }
 /*****
 * void jaquePeon
@@ -88,7 +99,7 @@ void jaquePeon(Tablero tablero)
 	for (int indice = 0; indice < espacios_validos; indice++)
 	{
 		int posXRey = arreglorey[indice].x;
-    	int posYRey = arreglorey[indice].y;
+		int posYRey = arreglorey[indice].y;
 			for (int i = 0; i < tablero.cantidad_piezas; i++)
 			{
 				if (tablero.piezas_tablero[i].simbolo == 'P')
@@ -105,7 +116,7 @@ void jaquePeon(Tablero tablero)
 			}
 
 	}
-    return;
+	return;
 }
 /*****
 * void jaqueAlfil
@@ -125,33 +136,39 @@ void jaquePeon(Tablero tablero)
 *****/
 
 void jaqueAlfil(Tablero tablero){
+	for (int indice = 0; indice < espacios_validos; indice++)
+	{
+		int posXRey = arreglorey[indice].x;
+		int posYRey = arreglorey[indice].y;
+		char adj[4];
+		bool amenaza[4] = {false, false, false, false};
+		bool bloqueado[4] = {false, false, false, false};
 
-    for (int indice = 0; indice < espacios_validos; indice++)
-    {
-        int posXRey = arreglorey[indice].x;
-        int posYRey = arreglorey[indice].y;
-        char adj[4];
-        int vacios[4] = {0, 0, 0, 0};
-        int numOtras;
-        for (int i = 1; i < 8; i++)
-        {
-            numOtras = 0;
-            adj[0] = BuscarPieza(tablero, posXRey + i, posYRey + i);
-            adj[1] = BuscarPieza(tablero, posXRey + i, posYRey - i);
-            adj[2] = BuscarPieza(tablero, posXRey - i, posYRey + i);
-            adj[3] = BuscarPieza(tablero, posXRey - i, posYRey - i);
+		for (int i = 1; i < 8; i++)
+		{
+			adj[0] = BuscarPieza(tablero, posXRey + i, posYRey + i);
+			adj[1] = BuscarPieza(tablero, posXRey + i, posYRey - i);
+			adj[2] = BuscarPieza(tablero, posXRey - i, posYRey + i);
+			adj[3] = BuscarPieza(tablero, posXRey - i, posYRey - i);
 
-            for (int j = 0; j < 4; j++)
-            {
-                if ((adj[j] == 'A')&&(vacios[j]== i - 1)){
-                    arreglorey[indice].amenaza = true;
-                } 
-                if (adj[j] != '.') numOtras++;
-                if ((adj[j] == '.') || (adj[j] == 'X')) vacios[j]++;
-            }
-        }
-    return;
+			for (int j = 0; j < 4; j++)
+			{
+				if (!amenaza[j] && !bloqueado[j]) 
+				{
+					if (adj[j] == 'A') 
+					{
+						arreglorey[indice].amenaza = true;
+						amenaza[j] = true;
+					} 
+					else if (adj[j] != '.') 
+					{
+						bloqueado[j] = true;
+					}
+				}
+			}
+		}
     }
+	return;
 }
 /*****
 * void jaqueReina
@@ -172,52 +189,59 @@ void jaqueAlfil(Tablero tablero){
 * Returns: void
 *****/
 void jaqueReina(Tablero tablero){
-    for (int indice = 0; indice < espacios_validos; indice++)
-    {        
-        int posXRey = arreglorey[indice].x;
-        int posYRey = arreglorey[indice].y;
-	    char adjT[4];
-        int vaciosT[4] = {0, 0, 0, 0};
-        int numOtrasT;
-        for (int i = 1; i < 8; i++)
-        {
-            numOtrasT = 0;
-            adjT[0] = BuscarPieza(tablero, posXRey + i, posYRey);
-            adjT[1] = BuscarPieza(tablero, posXRey - i, posYRey);
-            adjT[2] = BuscarPieza(tablero, posXRey, posYRey + i);
-            adjT[3] = BuscarPieza(tablero, posXRey, posYRey - i);
+	for (int indice = 0;indice < espacios_validos; indice++)
+	{
+		int posXRey = arreglorey[indice].x;
+		int posYRey = arreglorey[indice].y;
+		char adjT[4];
+		int vaciosT[4] = {0, 0, 0, 0};
+		int numOtrasT;
+		for (int i = 1; i < 8; i++)
+		{
+			numOtrasT = 0;
+			adjT[0] = BuscarPieza(tablero, posXRey + i, posYRey);
+			adjT[1] = BuscarPieza(tablero, posXRey - i, posYRey);
+			adjT[2] = BuscarPieza(tablero, posXRey, posYRey + i);
+			adjT[3] = BuscarPieza(tablero, posXRey, posYRey - i);
 
-            for (int j = 0; j < 4; j++)
-            {
-                if ((adjT[j] == 'R')&&(vaciosT[j] == i - 1)){
-                    arreglorey[indice].amenaza = true;
-                } 
-                if (adjT[j] != '.') numOtrasT++;
-                if ((adjT[j] == '.') || (adjT[j] == 'X')) vaciosT[j]++;
-            }
-        }
-        char adjA[4];
-        int vaciosA[4] = {0, 0, 0, 0};
-        int numOtrasA;
-        for (int i = 1; i < 8; i++)
-        {
-            numOtrasA = 0;
-            adjA[0] = BuscarPieza(tablero, posXRey + i, posYRey + i);
-            adjA[1] = BuscarPieza(tablero, posXRey + i, posYRey - i);
-            adjA[2] = BuscarPieza(tablero, posXRey - i, posYRey + i);
-            adjA[3] = BuscarPieza(tablero, posXRey - i, posYRey - i);
+			for (int j = 0; j < 4; j++)
+			{
+				if ((adjT[j] == 'R')&&(vaciosT[j] == i - 1)){
+					arreglorey[indice].amenaza = true;
+				} 
+				if (adjT[j] != '.') numOtrasT++;
+				if ((adjT[j] == '.') || (adjT[j] == 'X')) vaciosT[j]++;
+			}
+		}
+		char adjA[4];
+		bool amenaza[4] = {false, false, false, false};
+		bool bloqueado[4] = {false, false, false, false};
 
-            for (int j = 0; j < 4; j++)
-            {
-                if ((adjA[j] == 'R')&&(vaciosA[j] == i - 1)){
-                    arreglorey[indice].amenaza = true;
-                } 
-                if (adjA[j] != '.') numOtrasA++;
-                if ((adjA[j] == '.') || (adjA[j] == 'X')) vaciosA[j]++;
-            }
-        }
-    }
-    return;
+		for (int i = 1; i < 8; i++)
+        {
+			adjA[0] = BuscarPieza(tablero, posXRey + i, posYRey + i);
+			adjA[1] = BuscarPieza(tablero, posXRey + i, posYRey - i);
+			adjA[2] = BuscarPieza(tablero, posXRey - i, posYRey + i);
+			adjA[3] = BuscarPieza(tablero, posXRey - i, posYRey - i);
+
+			for (int j = 0; j < 4; j++)
+			{
+				if (!amenaza[j] && !bloqueado[j]) 
+				{
+					if (adjA[j] == 'A') 
+					{
+						arreglorey[indice].amenaza = true;
+						amenaza[j] = true;
+					} 
+					else if (adjA[j] != '.') 
+					{
+						bloqueado[j] = true;
+					}
+				}
+			}
+		}
+	}
+	return;
 }
 
 /*****
@@ -238,32 +262,33 @@ void jaqueReina(Tablero tablero){
 *****/
 
 void jaqueTorre(Tablero& tablero){
-	
-    for (int indice = 0; indice < espacios_validos; indice++)
-    {
-        int posXRey = arreglorey[indice].x;
-    	int posYRey = arreglorey[indice].y;
-        char adj[4];
-        int vacios[4] = {0, 0, 0, 0};
-        int numOtras;
-        for (int i = 1; i < 8; i++)
-        {
-            numOtras = 0;
-            adj[0] = BuscarPieza(tablero, posXRey + i, posYRey);
-            adj[1] = BuscarPieza(tablero, posXRey - i, posYRey);
-            adj[2] = BuscarPieza(tablero, posXRey, posYRey + i);
-            adj[3] = BuscarPieza(tablero, posXRey, posYRey - i);
-            for (int j = 0; j < 4; j++)
-            {
-                if ((adj[j] == 'T') && (vacios[j] == i - 1)){
-                    arreglorey[indice].amenaza = true;
-                } 
-                if (adj[j] != '.') numOtras++;
-                if ((adj[j] == '.') || (adj[j] == 'X')) vacios[j]++;
-            }
-        }
-    }
-    return;
+	for (int indice = 0; indice < espacios_validos; indice++)
+	{
+		int posXRey = arreglorey[indice].x;
+		int posYRey = arreglorey[indice].y;
+		char adj[4];
+		int vacios[4] = {0, 0, 0, 0};
+		int numOtras;
+		for (int i = 1; i < 8; i++)
+		{
+			numOtras = 0;
+			adj[0] = BuscarPieza(tablero, posXRey + i, posYRey);
+			adj[1] = BuscarPieza(tablero, posXRey - i, posYRey);
+			adj[2] = BuscarPieza(tablero, posXRey, posYRey + i);
+			adj[3] = BuscarPieza(tablero, posXRey, posYRey - i);
+			for (int j = 0; j < 4; j++)
+			{
+			if ((adj[j] == 'T') && (vacios[j] == i - 1))
+                {
+					arreglorey[indice].amenaza = true;
+				} 
+
+				if (adj[j] != '.') numOtras++;
+				if ((adj[j] == '.') || (adj[j] == 'X')) vacios[j]++;
+			}
+		}
+	}
+	return;
 }
 
 /*****
@@ -282,30 +307,29 @@ void jaqueTorre(Tablero& tablero){
 *****/
 
 void jaqueCaballo(Tablero tablero){
-	
-    for (int indice = 0; indice < espacios_validos; indice++)
-    {
-        int posXRey = arreglorey[indice].x;
-    	int posYRey = arreglorey[indice].y;
-        for (int i = 0; i < tablero.cantidad_piezas; i++)
-        {
-            if (tablero.piezas_tablero[i].simbolo == 'C')
-            {
-                if ((tablero.piezas_tablero[i].x == posXRey + 2 && tablero.piezas_tablero[i].y == posYRey + 1) ||
-                    (tablero.piezas_tablero[i].x == posXRey + 2 && tablero.piezas_tablero[i].y == posYRey - 1) ||
-                    (tablero.piezas_tablero[i].x == posXRey - 2 && tablero.piezas_tablero[i].y == posYRey + 1) ||
-                    (tablero.piezas_tablero[i].x == posXRey - 2 && tablero.piezas_tablero[i].y == posYRey - 1) ||
-                    (tablero.piezas_tablero[i].x == posXRey + 1 && tablero.piezas_tablero[i].y == posYRey + 2) ||
-                    (tablero.piezas_tablero[i].x == posXRey + 1 && tablero.piezas_tablero[i].y == posYRey - 2) ||
-                    (tablero.piezas_tablero[i].x == posXRey - 1 && tablero.piezas_tablero[i].y == posYRey + 2) ||
-                    (tablero.piezas_tablero[i].x == posXRey - 1 && tablero.piezas_tablero[i].y == posYRey - 2))
-                {
-                    arreglorey[indice].amenaza = true;
-                }
-            }
-        }
-    }
-    return;
+	for (int indice = 0; indice < espacios_validos; indice++)
+	{
+		int posXRey = arreglorey[indice].x;
+		int posYRey = arreglorey[indice].y;
+		for (int i = 0; i < tablero.cantidad_piezas; i++)
+		{
+			if (tablero.piezas_tablero[i].simbolo == 'C')
+			{
+				if ((tablero.piezas_tablero[i].x == posXRey + 2 && tablero.piezas_tablero[i].y == posYRey + 1) ||
+					(tablero.piezas_tablero[i].x == posXRey + 2 && tablero.piezas_tablero[i].y == posYRey - 1) ||
+					(tablero.piezas_tablero[i].x == posXRey - 2 && tablero.piezas_tablero[i].y == posYRey + 1) ||
+					(tablero.piezas_tablero[i].x == posXRey - 2 && tablero.piezas_tablero[i].y == posYRey - 1) ||
+					(tablero.piezas_tablero[i].x == posXRey + 1 && tablero.piezas_tablero[i].y == posYRey + 2) ||
+					(tablero.piezas_tablero[i].x == posXRey + 1 && tablero.piezas_tablero[i].y == posYRey - 2) ||
+					(tablero.piezas_tablero[i].x == posXRey - 1 && tablero.piezas_tablero[i].y == posYRey + 2) ||
+					(tablero.piezas_tablero[i].x == posXRey - 1 && tablero.piezas_tablero[i].y == posYRey - 2))
+				{
+					arreglorey[indice].amenaza = true;
+				}
+			}
+		}
+	}
+	return;
 }
 
 void expandirRey(Tablero tab){
@@ -336,40 +360,42 @@ void expandirRey(Tablero tab){
 }
 
 bool tableroEnJaqueMate(Tablero tablero){
-    int contador=0;
-    jaquePeon(tablero);
+	int contador=0;
+	jaquePeon(tablero);
 	jaqueTorre(tablero);
 	jaqueCaballo(tablero);
 	jaqueAlfil(tablero);
-    jaqueReina(tablero);
-    bloqueoReyEnemigo(tablero);
-    for (int i=0; i < espacios_validos; i++)
-    {
-        if (arreglorey[i].amenaza){
-            contador++;
-        }
-    }
-    if (contador == espacios_validos){
-        return true;
-    }
-    else{
-        return false;
-    }
+	jaqueReina(tablero);
+	bloqueoReyEnemigo(tablero);
+	for (int i=0; i < espacios_validos; i++)
+	{
+		if (arreglorey[i].amenaza)
+		{
+			contador++;
+		}
 	}
+	if (contador == espacios_validos)
+	{
+		return true;
+	}
+	else{
+		return false;
+	}
+}
 
 int main(){
-    ifstream archivo;
+	ifstream archivo;
 	archivo.open("tablero.txt", ios::in);
-    if (!archivo.is_open()) {
-        std::cerr << "Error al abrir el archivo." << std::endl;
-        return 1;
+	if (!archivo.is_open()) {
+		std::cerr << "Error al abrir el archivo." << std::endl;
+		return 1;
 	}
 	Tablero tablero;
 	char simbolo;
 	int i, j;
 	int  indice = 0;
 	string linea;
-    cout << endl;
+	cout << endl;
 	archivo >> tablero.cantidad_piezas;
 	tablero.piezas_tablero = new Pieza[tablero.cantidad_piezas];
 	for (j=0; j<8; j++){
@@ -389,9 +415,9 @@ int main(){
 	}
 	Tablero *tab = &tablero;
 	expandirRey(*tab);
-    bool jaque_mate = tableroEnJaqueMate(tablero);
-    jaque_mate ? cout << "si" << endl : cout << "no" << endl;
+	bool jaque_mate = tableroEnJaqueMate(tablero);
+	jaque_mate ? cout << "si" << endl : cout << "no" << endl;
 	delete[] tablero.piezas_tablero;
 	archivo.close();
-    return 0;
+	return 0;
 };
