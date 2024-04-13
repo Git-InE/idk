@@ -123,12 +123,13 @@ void jaquePeon(Tablero tablero)
 * void jaqueAlfil
 ******
 * Resumen Función
-* Crea dos arreglos, uno para las piezas adyacentes y otro para las posiciones con un "."
-* despues de eso inicia un ciclo for, en el cual guarda las piezas adyacentes en el arreglo adj
-* si la pieza adyacente es un alfil y la cantidad de posiciones vacias es igual a i-1, entonces el rey está en jaque
-* en caso de que no se cumpla, agregará 1 al contador de piezas adyacentes y si la pieza adyacente es distinta de "."
-* entonces agregará 1 al contador de piezas adyacentes
-* si la cantidad de piezas adyacentes es igual a 4, entonces retornará false
+* La función entra en un bucle que recorre las cuatro direcciones diagonales alrededor del rey. 
+* En cada iteración del bucle, la función busca la pieza en la posición diagonal correspondiente y la almacena en el arreglo adj.
+* Después de obtener la pieza adyacente, la función verifica si esta pieza es un alfil.
+* Si es así, y si no hay otras piezas bloqueando el camino entre el alfil y el rey, la función marca al rey como en jaque en esa dirección.
+* Si la pieza adyacente no es un alfil, la función verifica si la posición está vacía o bloqueada por otra pieza.
+* Si la posición está vacía, la función incrementa el contador de posiciones vacías en esa dirección.
+* Si la posición está bloqueada por otra pieza, la función marca esa dirección como bloqueada.
 ******
 * Input:
 * Tablero tablero, tablero con las piezas
@@ -178,7 +179,6 @@ void jaqueAlfil(Tablero tablero){
 * si la pieza adyacente es un reina y la cantidad de posiciones vacias es igual a i-1, entonces el rey está en jaque
 * en caso de que no se cumpla, agregará 1 al contador de piezas adyacentes y si la pieza adyacente es distinta de "."
 * entonces agregará 1 al contador de piezas adyacentes
-* si la cantidad de piezas adyacentes es igual a 4, entonces retornará false
 ******
 * Input:
 * Tablero tablero, tablero con las piezas
@@ -322,7 +322,21 @@ void jaqueCaballo(Tablero tablero){
     }
     return;
 }
-
+/*****
+* void expandirRey
+******
+* Resumen Función
+* expandirRey se encarga de generar un arreglo global de las casillas adyacentes al rey,
+* siendo un cuadrado 3x3 donde se le agrega adicionalmente una variable booleana de "amenaza"
+* que no posee el struct Pieza, con este arreglo se podra determinar si el rey tiene
+* movimientos posibles o se encuentra en jaquemate
+******
+* Input:
+* Tablero tab, el tablero que guarda las piezas
+* .......
+******
+* Returns: void
+*****/
 void expandirRey(Tablero tab){
 	int indice = reyindice;
 	int posReyX = tab.piezas_tablero[indice].x;
@@ -349,9 +363,26 @@ void expandirRey(Tablero tab){
 
 	return;
 }
+/*****
+* bool tableroEnJaqueMate
+******
+* Resumen Función
+* Esta funcion se encarga de ejecutar todas las funciones void anteriormente
+* definidas, luego itera sobre el arreglo para buscar todas las casillas que
+* se encuentran amenazadas del rey (su circulo cercano 3x3) descartando las
+* posiciones que puedan estar fuera del tablero, si el contador coincide con
+* todos los movimientos posibles del rey, este se encuentra en jaque mate
+******
+* Input:
+* Tablero tablero, tablero con las piezas
+******
+* Returns:
+* Booleano, True si el rey esta en jaque mate y False si aun tiene movimientos disponibles
+*****/
 
 bool tableroEnJaqueMate(Tablero tablero){
     int contador=0;
+    expandirRey(tablero);
     jaquePeon(tablero);
 	jaqueTorre(tablero);
 	jaqueCaballo(tablero);
@@ -402,8 +433,6 @@ int main(){
 			}
 		}
 	}
-	Tablero *tab = &tablero;
-	expandirRey(*tab);
     bool jaque_mate = tableroEnJaqueMate(tablero);
     jaque_mate ? cout << "si" << endl : cout << "no" << endl;
 	delete[] tablero.piezas_tablero;
