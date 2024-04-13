@@ -137,17 +137,16 @@ void jaquePeon(Tablero tablero)
 *****/
 
 void jaqueAlfil(Tablero tablero){
-
     for (int indice = 0; indice < espacios_validos; indice++)
     {
         int posXRey = arreglorey[indice].x;
         int posYRey = arreglorey[indice].y;
         char adj[4];
-        int vacios[4] = {0, 0, 0, 0};
-        int numOtras;
+        bool amenaza[4] = {false, false, false, false};
+        bool bloqueado[4] = {false, false, false, false};
+
         for (int i = 1; i < 8; i++)
         {
-            numOtras = 0;
             adj[0] = BuscarPieza(tablero, posXRey + i, posYRey + i);
             adj[1] = BuscarPieza(tablero, posXRey + i, posYRey - i);
             adj[2] = BuscarPieza(tablero, posXRey - i, posYRey + i);
@@ -155,15 +154,18 @@ void jaqueAlfil(Tablero tablero){
 
             for (int j = 0; j < 4; j++)
             {
-                if ((adj[j] == 'A')&&(vacios[j]== i - 1)){
-                    arreglorey[indice].amenaza = true;
-                } 
-                if (adj[j] != '.') numOtras++;
-                if ((adj[j] == '.') || (adj[j] == 'X')) vacios[j]++;
+                if (!amenaza[j] && !bloqueado[j]) {
+                    if (adj[j] == 'A') {
+                        arreglorey[indice].amenaza = true;
+                        amenaza[j] = true;
+                    } else if (adj[j] != '.') {
+                        bloqueado[j] = true;
+                    }
+                }
             }
         }
-    return;
     }
+    return;
 }
 /*****
 * void jaqueReina
@@ -209,11 +211,11 @@ void jaqueReina(Tablero tablero){
             }
         }
         char adjA[4];
-        int vaciosA[4] = {0, 0, 0, 0};
-        int numOtrasA;
+        bool amenaza[4] = {false, false, false, false};
+        bool bloqueado[4] = {false, false, false, false};
+
         for (int i = 1; i < 8; i++)
         {
-            numOtrasA = 0;
             adjA[0] = BuscarPieza(tablero, posXRey + i, posYRey + i);
             adjA[1] = BuscarPieza(tablero, posXRey + i, posYRey - i);
             adjA[2] = BuscarPieza(tablero, posXRey - i, posYRey + i);
@@ -221,11 +223,14 @@ void jaqueReina(Tablero tablero){
 
             for (int j = 0; j < 4; j++)
             {
-                if ((adjA[j] == 'R')&&(vaciosA[j] == i - 1)){
-                    arreglorey[indice].amenaza = true;
-                } 
-                if (adjA[j] != '.') numOtrasA++;
-                if ((adjA[j] == '.') || (adjA[j] == 'X')) vaciosA[j]++;
+                if (!amenaza[j] && !bloqueado[j]) {
+                    if (adjA[j] == 'A') {
+                        arreglorey[indice].amenaza = true;
+                        amenaza[j] = true;
+                    } else if (adjA[j] != '.') {
+                        bloqueado[j] = true;
+                    }
+                }
             }
         }
     }
