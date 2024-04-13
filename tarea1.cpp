@@ -30,7 +30,7 @@ struct Tablero {
 	int cantidad_piezas;
 	Pieza *piezas_tablero;
 };
-
+PiezaRey arreglorey[9];
 int reyindice, espacios_validos = 0;
 
 char BuscarPieza(Tablero tablero, int x, int y){
@@ -44,91 +44,76 @@ char BuscarPieza(Tablero tablero, int x, int y){
 
 bool jaquePeon(Tablero tablero)
 {
-    int posXRey = tablero.piezas_tablero[reyindice].x;
-    int posYRey = tablero.piezas_tablero[reyindice].y;
-	for (int indice = 0;indice<espacios_validos; indice++)
+	int indice = 0;
+	for (indice; indice < espacios_validos; indice++)
 	{
-		for (int i = 0; i < tablero.cantidad_piezas; i++)
-		{
-			if (tablero.piezas_tablero[i].simbolo == 'P')
+		int posXRey = arreglorey[indice].x;
+    	int posYRey = arreglorey[indice].y;
+			for (int i = 0; i < tablero.cantidad_piezas; i++)
 			{
-				if (tablero.piezas_tablero[i].x == posXRey + 1 && tablero.piezas_tablero[i].y == posYRey + 1)
+				if (tablero.piezas_tablero[i].simbolo == 'P')
 				{
-					cout << "Jaque" << endl;
-				}
-				else if (tablero.piezas_tablero[i].x == posXRey - 1 && tablero.piezas_tablero[i].y == posYRey + 1)
-				{
-					cout << "Jaque" << endl;
+					if (tablero.piezas_tablero[i].x == posXRey + 1 && tablero.piezas_tablero[i].y == posYRey + 1)
+					{
+						arreglorey[indice].amenaza = true;
+					}
+					else if (tablero.piezas_tablero[i].x == posXRey - 1 && tablero.piezas_tablero[i].y == posYRey + 1)
+					{
+						arreglorey[indice].amenaza = true;
+					}
 				}
 			}
-		}
 
 	}
     return false;
 }
 
 bool jaqueTorre(Tablero& tablero){
-	int posXRey = tablero.piezas_tablero[reyindice].x;
-	int posYRey = tablero.piezas_tablero[reyindice].y;
-	int contador = 0;
-	
-	for (int x = posXRey + 1; x < 8 - posXRey; x++)
+	int indice = 0;
+	for (indice; indice < espacios_validos; indice++)
 	{
-		if (BuscarPieza(tablero, x, posYRey) != 'T')
+		int posXRey = arreglorey[indice].x;
+    	int posYRey = arreglorey[indice].y;
+		for (int x = posXRey + 1; x < 8; ++x) 
 		{
-			contador++;
-		}
-		else {
-			cout << "Jaque" << endl;
-			return true;
-		}
+            char pieza = BuscarPieza(tablero, x, posYRey);
+            if (pieza == 'T') {
+				arreglorey[indice].amenaza = true;
+            } else if (pieza != '.') {
+                break; // Pieza diferente, detener búsqueda (colision)
+            }
+        }
 
-	}
-
-	for (int x = posXRey - 1; x >= 0; x--)
-	{
-		if (BuscarPieza(tablero, x, posYRey) != 'T')
+		for (int x = posXRey - 1; x >= 0; x--)
 		{
-			contador++;
+			char pieza = BuscarPieza(tablero, x, posYRey);
+            if (pieza == 'T') {
+				arreglorey[indice].amenaza = true;
+            } else if (pieza != '.') {
+                break;
+            }
 		}
-		else {
-			cout << "Jaque" << endl;
-			return true;
-		}
-	}
 
-	for (int y = posYRey + 1; y < 8 - posYRey; y++)
-	{
-		if (BuscarPieza(tablero, posXRey, y) != 'T')
+		for (int y = posYRey + 1; y < 8 - posYRey; y++)
 		{
-			contador++;
+			char pieza = BuscarPieza(tablero, posXRey, y);
+            if (pieza == 'T') {
+				arreglorey[indice].amenaza = true;
+            } else if (pieza != '.') {
+                break;
+            }
 		}
-		else {
-			cout << "Jaque" << endl;
-			return true;
-		}
-	}
 
-	for (int y = posYRey - 1; y >= 0; y--)
-	{
-		if (BuscarPieza(tablero, posXRey, y) != 'T')
+		for (int y = posYRey - 1; y >= 0; y--)
 		{
-			contador++;
-		}
-		
-		else {
-
-			cout << "Jaque" << endl;
-			return true;
+			char pieza = BuscarPieza(tablero, posXRey, y);
+            if (pieza == 'T') {
+				arreglorey[indice].amenaza = true;
+            } else if (pieza != '.') {
+                break;
+            }
 		}
 	}
-
-	if (contador < 4)
-	{
-		cout << "No hay jaque por Torre" << endl;
-		return true;
-	}
-
 	return false;
 }
 
@@ -228,13 +213,10 @@ bool jaqueReina(Tablero tablero){
 	return false;	
 }
 
-PiezaRey *expandirRey(Tablero tab){
-	PiezaRey *posRey;
-	posRey = new PiezaRey[9];
+int expandirRey(Tablero tab){
 	int indice = reyindice;
 	int posReyX = tab.piezas_tablero[indice].x;
 	int posReyY = tab.piezas_tablero[indice].y;
-	cout << "rey: " << posReyX << ',' << posReyY << endl;
 	int adjX,adjY;
 	int contador = 0;
 	for (int i = -1; i <= 1; i++)
@@ -245,20 +227,17 @@ PiezaRey *expandirRey(Tablero tab){
 			adjY = posReyY + j;
 			if (adjX >= 0 && adjX < 8 && adjY >= 0 && adjY < 8)
 			{	
-				posRey[contador].simbolo = BuscarPieza(tab, adjX, adjY);
-				posRey[contador].x = adjX;
-				posRey[contador].y = adjY;
-				posRey[contador].amenaza = false;
+				arreglorey[contador].simbolo = BuscarPieza(tab, adjX, adjY);
+				arreglorey[contador].x = adjX;
+				arreglorey[contador].y = adjY;
+				arreglorey[contador].amenaza = false;
 				contador++;
 			}			
 		}
 	}
 	espacios_validos = contador;
-	for (int i = 0; i < 9; i++)
-	{
-		cout << posRey[i].x << ' ' << posRey[i].y << ' ' << posRey[i].simbolo << endl;
-	}
-	return posRey;
+
+	return espacios_validos;
 }
 
 
@@ -292,7 +271,7 @@ int main(){
 		}
 	}
 	Tablero *tab = &tablero;
-	PiezaRey *Punt_Rey = expandirRey(*tab);
+	int validos = expandirRey(*tab);
 	
 	// solo para ver si funciona las funciones
 	bool jaque_peon = jaquePeon(*tab);
@@ -303,7 +282,6 @@ int main(){
 
     bool jaque_mate = tableroEnJaqueMate(tablero);
     tableroEnJaqueMate ? cout << "si" << endl : cout << "no" << endl;
-	delete[] Punt_Rey;
 	delete[] tablero.piezas_tablero;
 	archivo.close();
     return 0;
