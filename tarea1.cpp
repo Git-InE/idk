@@ -293,7 +293,27 @@ void jaqueCaballo(Tablero tablero){
 
 void bloqueoReyEnemigo(Tablero tablero){
     int indice = 0;
-   
+    for (indice; indice < espacios_validos; indice++)
+    {
+        int posXRey = arreglorey[indice].x;
+        int posYRey = arreglorey[indice].y;
+
+        for (int i = -1; i <= 1; i++)
+        {
+            for (int j = -1; j <= 1; j++)
+            {
+                if (i != 0 || j != 0)
+                {
+                    char pieza = BuscarPieza(tablero, posXRey + i, posYRey + j);
+                    if (pieza == 'K')
+                    {
+                        cout << "Rey enemigo bloquea" << endl;
+                        arreglorey[indice].amenaza = true;
+                    }
+                }
+            }
+        }
+    }
 }
 
 
@@ -368,7 +388,7 @@ int main(){
 	jaqueCaballo(*tab);
 	jaqueAlfil(*tab);
     jaqueReina(*tab);
-
+    bloqueoReyEnemigo(*tab);
 
     bool jaque_mate = tableroEnJaqueMate(tablero);
     tableroEnJaqueMate ? cout << "si" << endl : cout << "no" << endl;
