@@ -26,7 +26,7 @@ int reyindice, espacios_validos = 0;
 * char BuscarPieza
 ******
 * Resumen Función
-*
+*busca el simbolo de la pieza en la posicion (x,y)
 ******
 * Input:
 * Tablero tablero, tablero con las piezas
@@ -46,10 +46,20 @@ char BuscarPieza( Tablero tablero, int x, int y){
 	}
 	return '.';
 }
-
+/*****
+* void bloqueoReyEnemigo
+******
+* Resumen Función
+* realiza una busqueda alrededor de todas las casillas posibles que pueden ser amenazadas por el rey enemigo
+* en caso de encontrar al rey enemigo que amenace una de estas casillas, marca la amenaza a la casilla señalada a true
+******
+* Input:
+* Tablero tablero, tablero con las piezas
+******
+* Returns: void
+*****/
 void bloqueoReyEnemigo(Tablero tablero){
-    int indice = 0;
-    for (indice; indice < espacios_validos; indice++)
+    for (int indice = 0; indice < espacios_validos; indice++)
     {
         int posXRey = arreglorey[indice].x;
         int posYRey = arreglorey[indice].y;
@@ -87,7 +97,7 @@ void bloqueoReyEnemigo(Tablero tablero){
 void jaquePeon(Tablero tablero)
 {
 	int indice = 0;
-	for (indice; indice < espacios_validos; indice++)
+	for (int indice = 0; indice < espacios_validos; indice++)
 	{
 		int posXRey = arreglorey[indice].x;
     	int posYRey = arreglorey[indice].y;
@@ -128,8 +138,7 @@ void jaquePeon(Tablero tablero)
 
 void jaqueAlfil(Tablero tablero){
 
-    int indice = 0;
-    for (indice; indice < espacios_validos; indice++)
+    for (int indice = 0; indice < espacios_validos; indice++)
     {
         int posXRey = arreglorey[indice].x;
         int posYRey = arreglorey[indice].y;
@@ -175,10 +184,7 @@ void jaqueAlfil(Tablero tablero){
 * Returns: void
 *****/
 void jaqueReina(Tablero tablero){
-    int indice = 0;
-    int jaqueX, jaqueY;
-
-    for (indice; indice < espacios_validos; indice++)
+    for (int indice = 0;indice < espacios_validos; indice++)
     {        
         int posXRey = arreglorey[indice].x;
         int posYRey = arreglorey[indice].y;
@@ -244,8 +250,7 @@ void jaqueReina(Tablero tablero){
 *****/
 
 void jaqueTorre(Tablero& tablero){
-	int indice = 0;
-    for (indice; indice < espacios_validos; indice++)
+    for (int indice = 0; indice < espacios_validos; indice++)
     {
         int posXRey = arreglorey[indice].x;
     	int posYRey = arreglorey[indice].y;
@@ -288,8 +293,7 @@ void jaqueTorre(Tablero& tablero){
 *****/
 
 void jaqueCaballo(Tablero tablero){
-	int indice = 0;
-    for (indice; indice < espacios_validos; indice++)
+    for (int indice = 0; indice < espacios_validos; indice++)
     {
         int posXRey = arreglorey[indice].x;
     	int posYRey = arreglorey[indice].y;
