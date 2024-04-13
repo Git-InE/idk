@@ -71,7 +71,7 @@ void bloqueoReyEnemigo(Tablero tablero){
     }
 }
 /*****
-* bool jaquePeon
+* void jaquePeon
 ******
 * Resumen Función
 * Primero busca en el arreglo de piezas si hay un peon existente,
@@ -81,8 +81,7 @@ void bloqueoReyEnemigo(Tablero tablero){
 * Input:
 * Tablero tablero, tablero con las piezas
 ******
-* Returns:
-* bool, true si el rey está en jaque, false si no lo está
+* Returns: void
 *****/
 
 void jaquePeon(Tablero tablero)
@@ -124,8 +123,7 @@ void jaquePeon(Tablero tablero)
 * Input:
 * Tablero tablero, tablero con las piezas
 ******
-* Returns:
-* void, true si el rey está en jaque, false si no lo está
+* Returns:void
 *****/
 
 void jaqueAlfil(Tablero tablero){
@@ -152,7 +150,7 @@ void jaqueAlfil(Tablero tablero){
                     arreglorey[indice].amenaza = true;
                 } 
                 if (adj[j] != '.') numOtras++;
-                if (adj[j] == '.') vacios[j]++;
+                if ((adj[j] == '.') || (adj[j] == 'X')) vacios[j]++;
             }
         }
     return;
@@ -174,8 +172,7 @@ void jaqueAlfil(Tablero tablero){
 * Input:
 * Tablero tablero, tablero con las piezas
 ******
-* Returns:
-* void, true si el rey está en jaque, false si no lo está
+* Returns: void
 *****/
 void jaqueReina(Tablero tablero){
     int indice = 0;
@@ -202,7 +199,7 @@ void jaqueReina(Tablero tablero){
                     arreglorey[indice].amenaza = true;
                 } 
                 if (adjT[j] != '.') numOtrasT++;
-                if (adjT[j] == '.') vaciosT[j]++;
+                if ((adjT[j] == '.') || (adjT[j] == 'X')) vaciosT[j]++;
             }
         }
         char adjA[4];
@@ -222,7 +219,7 @@ void jaqueReina(Tablero tablero){
                     arreglorey[indice].amenaza = true;
                 } 
                 if (adjA[j] != '.') numOtrasA++;
-                if (adjA[j] == '.') vaciosA[j]++;
+                if ((adjA[j] == '.') || (adjA[j] == 'X')) vaciosA[j]++;
             }
         }
     }
@@ -287,8 +284,7 @@ void jaqueTorre(Tablero& tablero){
 * Input:
 * Tablero tablero, tablero con las piezas
 ******
-* Returns:
-* void, true si el rey está en jaque, false si no lo está
+* Returns: void
 *****/
 
 void jaqueCaballo(Tablero tablero){
@@ -379,7 +375,7 @@ int main(){
 	int i, j;
 	int  indice = 0;
 	string linea;
-    cout << "hola" << endl;
+    cout << endl;
 	archivo >> tablero.cantidad_piezas;
 	tablero.piezas_tablero = new Pieza[tablero.cantidad_piezas];
 	for (j=0; j<8; j++){
