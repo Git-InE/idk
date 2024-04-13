@@ -96,7 +96,6 @@ void bloqueoReyEnemigo(Tablero tablero){
 
 void jaquePeon(Tablero tablero)
 {
-	int indice = 0;
 	for (int indice = 0; indice < espacios_validos; indice++)
 	{
 		int posXRey = arreglorey[indice].x;
@@ -155,11 +154,15 @@ void jaqueAlfil(Tablero tablero){
 
             for (int j = 0; j < 4; j++)
             {
-                if (!amenaza[j] && !bloqueado[j]) {
-                    if (adj[j] == 'A') {
+                if (!amenaza[j] && !bloqueado[j]) 
+                {
+                    if (adj[j] == 'A') 
+                    {
                         arreglorey[indice].amenaza = true;
                         amenaza[j] = true;
-                    } else if (adj[j] != '.') {
+                    } 
+                    else if (adj[j] != '.') 
+                    {
                         bloqueado[j] = true;
                     }
                 }
@@ -223,11 +226,15 @@ void jaqueReina(Tablero tablero){
 
             for (int j = 0; j < 4; j++)
             {
-                if (!amenaza[j] && !bloqueado[j]) {
-                    if (adjA[j] == 'A') {
+                if (!amenaza[j] && !bloqueado[j]) 
+                {
+                    if (adjA[j] == 'A') 
+                    {
                         arreglorey[indice].amenaza = true;
                         amenaza[j] = true;
-                    } else if (adjA[j] != '.') {
+                    } 
+                    else if (adjA[j] != '.') 
+                    {
                         bloqueado[j] = true;
                     }
                 }
@@ -271,9 +278,10 @@ void jaqueTorre(Tablero& tablero){
             adj[3] = BuscarPieza(tablero, posXRey, posYRey - i);
             for (int j = 0; j < 4; j++)
             {
-                if ((adj[j] == 'T') && (vacios[j] == i - 1)){
+                if ((adj[j] == 'T') && (vacios[j] == i - 1))
+                {
                     arreglorey[indice].amenaza = true;
-                } 
+                }
                 if (adj[j] != '.') numOtras++;
                 if ((adj[j] == '.') || (adj[j] == 'X')) vacios[j]++;
             }
@@ -322,6 +330,7 @@ void jaqueCaballo(Tablero tablero){
     }
     return;
 }
+
 /*****
 * void expandirRey
 ******
@@ -337,6 +346,7 @@ void jaqueCaballo(Tablero tablero){
 ******
 * Returns: void
 *****/
+
 void expandirRey(Tablero tab){
 	int indice = reyindice;
 	int posReyX = tab.piezas_tablero[indice].x;
@@ -363,6 +373,7 @@ void expandirRey(Tablero tab){
 
 	return;
 }
+
 /*****
 * bool tableroEnJaqueMate
 ******
@@ -391,11 +402,13 @@ bool tableroEnJaqueMate(Tablero tablero){
     bloqueoReyEnemigo(tablero);
     for (int i=0; i < espacios_validos; i++)
     {
-        if (arreglorey[i].amenaza){
+        if (arreglorey[i].amenaza)
+        {
             contador++;
         }
     }
-    if (contador == espacios_validos){
+    if (contador == espacios_validos)
+    {
         return true;
     }
     else{
