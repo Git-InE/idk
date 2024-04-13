@@ -48,7 +48,7 @@ char BuscarPieza( Tablero tablero, int x, int y){
 }
 
 /*****
-* bool jaquePeon
+* void jaquePeon
 ******
 * Resumen Función
 * Primero busca en el arreglo de piezas si hay un peon existente,
@@ -58,11 +58,10 @@ char BuscarPieza( Tablero tablero, int x, int y){
 * Input:
 * Tablero tablero, tablero con las piezas
 ******
-* Returns:
-* bool, true si el rey está en jaque, false si no lo está
+* Returns: void
 *****/
 
-bool jaquePeon(Tablero tablero)
+void jaquePeon(Tablero tablero)
 {
 	int indice = 0;
 	for (indice; indice < espacios_validos; indice++)
@@ -85,10 +84,9 @@ bool jaquePeon(Tablero tablero)
 			}
 
 	}
-    return false;
 }
 /*****
-* bool jaqueAlfil
+* void jaqueAlfil
 ******
 * Resumen Función
 * Crea dos arreglos, uno para las piezas adyacentes y otro para las posiciones con un "."
@@ -101,11 +99,10 @@ bool jaquePeon(Tablero tablero)
 * Input:
 * Tablero tablero, tablero con las piezas
 ******
-* Returns:
-* bool, true si el rey está en jaque, false si no lo está
+* Returns:void
 *****/
 
-bool jaqueAlfil(Tablero tablero){
+void jaqueAlfil(Tablero tablero){
 
     int indice = 0;
     for (indice; indice < espacios_validos; indice++)
@@ -132,15 +129,11 @@ bool jaqueAlfil(Tablero tablero){
                 if (adj[j] != '.') numOtras++;
                 if (adj[j] == '.') vacios[j]++;
             }
-
-            if (numOtras == 4) return false;
-
         }
     }
-    return false;
 }
 /*****
-* bool jaqueReina
+* void jaqueReina
 ******
 * Resumen Función
 * Esta funcion es una mezcla de las funciones jaqueAlfil y jaqueTorre
@@ -155,10 +148,9 @@ bool jaqueAlfil(Tablero tablero){
 * Input:
 * Tablero tablero, tablero con las piezas
 ******
-* Returns:
-* bool, true si el rey está en jaque, false si no lo está
+* Returns: void
 *****/
-bool jaqueReina(Tablero tablero){
+void jaqueReina(Tablero tablero){
     int indice = 0;
     int jaqueX, jaqueY;
 
@@ -186,9 +178,6 @@ bool jaqueReina(Tablero tablero){
                 if (adjT[j] != '.') numOtrasT++;
                 if (adjT[j] == '.') vaciosT[j]++;
             }
-
-            if (numOtrasT==4) return false;
-
         }
         char adjA[4];
         int vaciosA[4] = {0, 0, 0, 0};
@@ -210,16 +199,12 @@ bool jaqueReina(Tablero tablero){
                 if (adjA[j] != '.') numOtrasA++;
                 if (adjA[j] == '.') vaciosA[j]++;
             }
-
-            if (numOtrasA == 4) return false;
-
         }
     }
-    return false;
 }
 
 /*****
-* bool jaqueTorre
+* void jaqueTorre
 ******
 * Resumen Función
 * Crea dos arreglos, uno para las piezas adyacentes y otro para las posiciones con un "."
@@ -231,11 +216,10 @@ bool jaqueReina(Tablero tablero){
 * Input:
 * Tablero tablero, tablero con las piezas
 ******
-* Returns:
-* bool, true si el rey está en jaque, false si no lo está
+* Returns: void
 *****/
 
-bool jaqueTorre(Tablero& tablero){
+void jaqueTorre(Tablero& tablero){
 	int indice = 0;
     for (indice; indice < espacios_validos; indice++)
     {
@@ -261,16 +245,12 @@ bool jaqueTorre(Tablero& tablero){
                 if (adj[j] != '.') numOtras++;
                 if (adj[j] == '.') vacios[j]++;
             }
-
-            if (numOtras==4) return false;
-
         }
     }
-    return false;
 }
 
 /*****
-* bool jaqueCaballo
+* void jaqueCaballo
 ******
 * Resumen Función
 * utilizando la posicion del rey, se busca si existe un caballo en las 8 posibles posiciones
@@ -281,11 +261,10 @@ bool jaqueTorre(Tablero& tablero){
 * Input:
 * Tablero tablero, tablero con las piezas
 ******
-* Returns:
-* bool, true si el rey está en jaque, false si no lo está
+* Returns: void
 *****/
 
-bool jaqueCaballo(Tablero tablero){
+void jaqueCaballo(Tablero tablero){
 	int indice = 0;
     for (indice; indice < espacios_validos; indice++)
     {
@@ -310,8 +289,13 @@ bool jaqueCaballo(Tablero tablero){
             }
         }
     }
-    return false;
 }
+
+void bloqueoReyEnemigo(Tablero tablero){
+    int indice = 0;
+   
+}
+
 
 int expandirRey(Tablero tab){
 	int indice = reyindice;
@@ -379,11 +363,11 @@ int main(){
 	int validos = expandirRey(*tab);
 	
 	// solo para ver si funciona las funciones
-	bool jaque_peon = jaquePeon(*tab);
-	bool jaque_torre = jaqueTorre(*tab);
-	bool jaque_caballo = jaqueCaballo(*tab);
-	bool jaque_alfil = jaqueAlfil(*tab);
-    bool jaque_reina = jaqueReina(*tab);
+	jaquePeon(*tab);
+	jaqueTorre(*tab);
+	jaqueCaballo(*tab);
+	jaqueAlfil(*tab);
+    jaqueReina(*tab);
 
 
     bool jaque_mate = tableroEnJaqueMate(tablero);
