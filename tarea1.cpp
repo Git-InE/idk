@@ -30,11 +30,8 @@ struct Tablero {
 	int cantidad_piezas;
 	Pieza *piezas_tablero;
 };
-struct TableroRey {
-	int espacios_validos;
-	PiezaRey *piezas_tablero;
-};
-int reyindice, piezasvalidas = 0;
+
+int reyindice, espacios_validos = 0;
 
 char BuscarPieza(Tablero tablero, int x, int y){
 	for (int i = 0; i < tablero.cantidad_piezas; i++){
@@ -49,7 +46,7 @@ bool jaquePeon(Tablero tablero)
 {
     int posXRey = tablero.piezas_tablero[reyindice].x;
     int posYRey = tablero.piezas_tablero[reyindice].y;
-	for (int indice = 0;indice<piezasvalidas; indice++)
+	for (int indice = 0;indice<espacios_validos; indice++)
 	{
 		for (int i = 0; i < tablero.cantidad_piezas; i++)
 		{
@@ -232,8 +229,8 @@ bool jaqueReina(Tablero tablero){
 }
 
 PiezaRey *expandirRey(Tablero tab){
-	TableroRey posRey;
-	posRey.piezas_tablero = new PiezaRey[9];
+	PiezaRey *posRey;
+	posRey = new PiezaRey[9];
 	int indice = reyindice;
 	int posReyX = tab.piezas_tablero[indice].x;
 	int posReyY = tab.piezas_tablero[indice].y;
@@ -248,20 +245,20 @@ PiezaRey *expandirRey(Tablero tab){
 			adjY = posReyY + j;
 			if (adjX >= 0 && adjX < 8 && adjY >= 0 && adjY < 8)
 			{	
-				posRey.piezas_tablero[contador].simbolo = BuscarPieza(tab, adjX, adjY);
-				posRey.piezas_tablero[contador].x = adjX;
-				posRey.piezas_tablero[contador].y = adjY;
-				posRey.piezas_tablero[contador].amenaza = false;
+				posRey[contador].simbolo = BuscarPieza(tab, adjX, adjY);
+				posRey[contador].x = adjX;
+				posRey[contador].y = adjY;
+				posRey[contador].amenaza = false;
 				contador++;
 			}			
 		}
 	}
-	posRey.espacios_validos = contador;
+	espacios_validos = contador;
 	for (int i = 0; i < 9; i++)
 	{
-		cout << posRey.piezas_tablero[i].x << ' ' << posRey.piezas_tablero[i].y << ' ' << posRey.piezas_tablero[i].simbolo << endl;
+		cout << posRey[i].x << ' ' << posRey[i].y << ' ' << posRey[i].simbolo << endl;
 	}
-	return posRey.piezas_tablero;
+	return posRey;
 }
 
 
