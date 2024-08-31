@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "Tablero.h"
 
+#define INVISIBLE (void *)1
+#define HIT (void *)2
+#define MISS (void *)3
 void ***tablero;
 
 void inicializarTablero(int tamano) {
@@ -17,12 +20,14 @@ void inicializarTablero(int tamano) {
 void mostrarTablero(int tamano) {
     for (int i = 0; i < tamano; i++) {
         for (int j = 0; j < tamano; j++) {
-            if (tablero[i][j] == NULL) {
-                printf("| |");
-            } else if (tablero[i][j] == (void *)1) {
-                printf("|X|"); // Acierto
-            } else {
-                printf("|O|"); // Fallo
+            if (tablero[j][i] == NULL) {
+                printf("| "); // Celda no disparada
+            } else if (tablero[j][i] == INVISIBLE) {
+                printf("|B"); // Barco no visible, pero no se muestra
+            } else if (tablero[j][i] == HIT) {
+                printf("|X"); // Acierto
+            } else if (tablero[j][i] == MISS) {
+                printf("|O"); // Fallo
             }
         }
         printf("\n");
@@ -68,9 +73,9 @@ void colocarBarcos(int tamano, int numBarcos, int barcos[]) {
             if (puedeColocar) {
                 for (int j = 0; j < barcos[i]; j++) {
                     if (orientacion == 0) {
-                        tablero[x][y + j] = (void *)1; // Representar barco con 1
+                        tablero[x][y + j] = INVISIBLE; // Representar barco invisible con 1
                     } else {
-                        tablero[x + j][y] = (void *)1; // Representar barco con 1
+                        tablero[x + j][y] = INVISIBLE; // Representar barco invisible con 1
                     }
                 }
                 colocado = 1;

@@ -3,6 +3,9 @@
 #include "Cartas.h"
 #include "Tablero.h"
 
+#define INVISIBLE (void *)1
+#define HIT (void *)2
+#define MISS (void *)3
 Mano Cartas;
 
 void inicializarMano() {
@@ -33,12 +36,16 @@ void usarCarta() {
 }
 
 void *disparoSimple(int x, int y) {
-    if (tablero[x][y] == (void *)1) {
-        tablero[x][y] = (void *)2; // Marcar acierto con 2
+    if (tablero[x][y] == INVISIBLE) {
+        tablero[x][y] = HIT; // Marcar acierto
         printf("HIT en (%d, %d)!\n", x, y);
-    } else {
-        tablero[x][y] = (void *)0; // Marcar fallo con 0
+    } else if (tablero[x][y] == NULL) {
+        tablero[x][y] = MISS; // Marcar fallo
         printf("MISS en (%d, %d)!\n", x, y);
+    } else if (tablero[x][y] == MISS) {
+        printf("FALLO anterior en (%d, %d)!\n", x, y);
+    } else if (tablero[x][y] == HIT) {
+        printf("ACIERTO anterior en (%d, %d)!\n", x, y);
     }
     return disparoSimple;
 }
