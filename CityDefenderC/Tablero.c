@@ -1,9 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
+#include "Tablero.h"
 
 void ***tablero;
-// ***
+
 void inicializarTablero(int tamano) {
     tablero = (void ***)malloc(tamano * sizeof(void **));
     for (int i = 0; i < tamano; i++) {
@@ -13,32 +13,21 @@ void inicializarTablero(int tamano) {
         }
     }
 }
-// ***
-// Parametro 1 : int tamano
-// ***
-// Inicializa el tablero cuadrado para un tamaño dado, asignando memoria para cada celda.
-// ***
 
-void mostrarTablero() {
-    for (int i = 0; i < 11; i++) { // Ajustar según tamaño
-        for (int j = 0; j < 11; j++) {
-            // Mostrar estado de cada celda
+void mostrarTablero(int tamano) {
+    for (int i = 0; i < tamano; i++) {
+        for (int j = 0; j < tamano; j++) {
             if (tablero[i][j] == NULL) {
-                printf("|  ");
+                printf("| |");
             } else if (tablero[i][j] == (void *)1) {
-                printf("|X "); // Acierto
+                printf("|X|"); // Acierto
             } else {
-                printf("|O "); // Fallo
+                printf("|O|"); // Fallo
             }
         }
         printf("\n");
     }
 }
-// ***
-// ***
-// Muestra el estado actual del tablero por pantalla. Las celdas pueden estar vacías,
-// contener un acierto (X) o un fallo (O).
-// ***
 
 void liberarTablero(int tamano) {
     for (int i = 0; i < tamano; i++) {
@@ -46,8 +35,46 @@ void liberarTablero(int tamano) {
     }
     free(tablero);
 }
-// ***
-// Parametro 1 : int tamano
-// ***
-// Libera la memoria asignada al tablero, evitando fugas de memoria.
-// ***
+
+void colocarBarcos(int tamano, int numBarcos, int barcos[]) {
+    for (int i = 0; i < numBarcos; i++) {
+        int colocado = 0;
+        while (!colocado) {
+            int orientacion = rand() % 2; // 0 = horizontal, 1 = vertical
+            int x = rand() % tamano;
+            int y = rand() % tamano;
+            int puedeColocar = 1;
+
+            // Verificar si el barco cabe en la posición
+            if (orientacion == 0) {
+                if (y + barcos[i] >= tamano) continue;
+                for (int j = 0; j < barcos[i]; j++) {
+                    if (tablero[x][y + j] != NULL) {
+                        puedeColocar = 0;
+                        break;
+                    }
+                }
+            } else {
+                if (x + barcos[i] >= tamano) continue;
+                for (int j = 0; j < barcos[i]; j++) {
+                    if (tablero[x + j][y] != NULL) {
+                        puedeColocar = 0;
+                        break;
+                    }
+                }
+            }
+
+            // Colocar el barco
+            if (puedeColocar) {
+                for (int j = 0; j < barcos[i]; j++) {
+                    if (orientacion == 0) {
+                        tablero[x][y + j] = (void *)1; // Representar barco con 1
+                    } else {
+                        tablero[x + j][y] = (void *)1; // Representar barco con 1
+                    }
+                }
+                colocado = 1;
+            }
+        }
+    }
+}
